@@ -139,3 +139,218 @@ FROM salaries
 WHERE
 	emp_id = 100009
 ;
+
+
+
+-- <SubQuery GPT 예제 1.>
+-- salaries 테이블에서 전체 급여의 평균보다 높은 급여를 받는 사원의 다음 정보를 조회하세요.
+-- 사원번호 (emp_id)
+-- 급여 (salary)
+-- 조건:
+-- 전체 급여의 평균을 서브쿼리로 구할 것
+-- 퇴사 여부와 관계없이 모든 급여 데이터를 대상으로 할 것
+-- 급여가 높은 순서대로 정렬할 것
+-- 힌트: AVG(), WHERE, SELECT 내부 서브쿼리
+
+SELECT
+	emp_id
+	, (
+		SELECT 
+			AVG(salary)
+		FROM salaries
+		WHERE
+			end_at IS NULL
+	) avg_sal
+FROM salaries
+WHERE 
+	avg_sal 
+ORDER BY avg_sal DESC
+;
+
+SELECT
+	AVG(salary)
+FROM salaries
+WHERE
+	end_at IS NULL
+;
+
+SELECT
+	emp_id
+	, salary
+FROM salaries
+WHERE
+	salary >= (
+		SELECT
+			AVG(salary)
+		FROM salaries
+		WHERE
+			end_at IS NULL
+	)
+	AND end_at IS NULL 
+ORDER BY salary DESC
+;
+
+	
+
+-- <SubQuery GPT 예제 2.>
+-- salaries 테이블에서 현재 재직 중인 급여 데이터 중 가장 높은 급여를 받는 사원의 정보를 조회하세요.
+
+-- 조회 항목:
+-- 사원번호 (emp_id)
+-- 급여 (salary)
+-- 조건:
+-- 현재 급여 데이터는 end_at IS NULL
+-- 가장 높은 급여와 동일한 급여를 받는 사원이 여러 명이라면 모두 조회할 것
+-- 서브쿼리를 활용할 것
+-- 힌트: MAX(), WHERE, 서브쿼리
+SELECT
+	emp_id
+	, salary
+FROM salaries
+WHERE
+	salary = (
+		SELECT
+			MAX(salary)
+		FROM salaries
+		WHERE
+			end_at IS NULL
+	)
+;
+
+SELECT
+	emp_id
+	, salary
+FROM salaries
+WHERE
+	end_at IS NULL
+ORDER BY salary DESC
+;
+
+
+
+
+-- <SubQuery GPT 예제 3.>
+-- 각 부서의 현재 소속 사원들의 평균 급여를 계산하고, 전체 재직 사원의 평균 급여보다 높은 부서만 조회하세요.
+
+-- 조회 항목:
+-- 부서명 (departments.dept_name)
+-- 부서 코드 (departments.dept_code)
+-- 부서별 평균 급여
+-- 조건:
+-- department_emps 테이블의 현재 소속 정보만 사용
+-- salaries 테이블의 현재 급여 정보만 사용
+-- 부서별 평균 급여가 전체 재직 사원의 평균 급여보다 높은 부서만 조회
+-- 부서별 평균 급여 내림차순 정렬
+-- 서브쿼리를 반드시 활용할 것
+-- 힌트:
+-- JOIN
+-- GROUP BY
+-- AVG()
+-- HAVING
+-- 서브쿼리
+
+
+
+-- ----------------------------------
+
+-- ----------------------------------
+-- select
+
+
+-- SELECT [DISTINCT] [컬럼명]
+-- FROM [테이블명]
+-- WHERE [쿼리 조건]
+-- GROUP BY [컬럼명] HAVING [집계함수 조건]
+-- ORDER BY [컬럼명 ASC || 컬럼명 DESC]
+-- LIMIT [n] OFFSET [n]
+-- ;
+
+SELECT
+	*
+FROM employees
+WHERE
+	fire_at IS NOT NULL
+ORDER BY birth ASC
+LIMIT 10
+;
+
+SELECT
+	*
+FROM employees
+WHERE
+	emp_id = 10009
+;
+
+SELECT
+	*
+FROM employees
+WHERE
+	birth <= '2000-01-01'
+	AND birth >= '1990-01-01'
+;
+
+SELECT
+	*
+FROM employees
+WHERE
+	`name` = '허미라'
+	AND birth >= '1980-01-01'
+;
+
+SELECT DISTINCT
+	`name`
+FROM employees
+WHERE
+	`name` = '허미라'
+	OR `name` = '박보람'
+;
+
+SELECT
+	*
+FROM employees
+WHERE
+	emp_id BETWEEN 1000 AND 1200
+;
+
+SELECT
+	*
+FROM employees
+WHERE
+	emp_id IN (1000, 1200)
+;
+
+SELECT
+	*
+FROM employees
+WHERE
+	`name` LIKE '%봄%'
+;
+
+SELECT 
+	*
+FROM employees
+WHERE
+	`name` LIKE '김_'
+;
+
+SELECT
+	*
+FROM employees
+ORDER BY birth, `name` DESC
+LIMIT 10
+;
+
+SELECT 
+	salary
+FROM salaries
+ORDER BY salary DESC
+;
+
+
+
+
+
+
+
+
+
