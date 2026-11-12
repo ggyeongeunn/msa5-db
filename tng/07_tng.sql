@@ -214,13 +214,24 @@ SELECT
 FROM salaries sal
 	JOIN employees emp
 		ON sal.emp_id = emp.emp_id
-			AND sal.end_at IS null
-			AND sal.salary >= (
-				SELECT
-					AVG(sal.salary)
-				FROM salaries sal
-			)
+			AND sal.end_at IS NULL
+			AND emp.fire_at IS NULL
+			-- AND sal.salary >= (
+-- 				SELECT
+-- 					AVG(sal.salary)
+-- 				FROM salaries sal
+-- 				WHERE end_at IS NULL
+-- 			)
+WHERE
+	sal.salary >= (
+		SELECT
+			AVG(salary)
+		FROM salaries
+		where
+			end_at IS NULL
+	)
 ;
+
 
 SELECT
 	AVG(salary)
@@ -229,9 +240,22 @@ FROM salaries;
 
 -- 가장 높은 급여를 받은 이력이있는 사원의 사번과 급여를 조회
 SELECT
-	salary
-	, emp_id
+	emp_id
+	, salary
 FROM salaries
 ORDER BY salary DESC
 LIMIT 1
 ;
+
+SELECT
+	emp_id
+	, salary
+FROM salaries
+WHERE
+	salary = (
+		SELECT
+			MAX(salary)
+		FROM salaries
+	)
+;
+
