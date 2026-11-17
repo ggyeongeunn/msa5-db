@@ -118,20 +118,103 @@ SELECT * FROM department_emps WHERE dept_code = 'D007';
 ROLLBACK;
 
 -- 14	전체 사원 수 구하기
+SELECT
+	COUNT(*) cnt_emp
+FROM employees
+WHERE
+	fire_at IS NULL
+;
 
 -- 15	사원들의 평균 급여 구하기
+SELECT 
+	CEIL(AVG(salary))
+FROM salaries
+WHERE end_at IS NULL
+;
+
 -- 16	가장 높은 급여와 가장 낮은 급여 구하기
+SELECT
+	MAX(salary) max_sal
+	, MIN(salary) min_sal
+FROM salaries
+WHERE
+	end_at IS NULL
+;
+
 -- 17	전체 급여 합계 구하기
+SELECT
+	SUM(salary)
+FROM salaries
+WHERE
+	end_at IS NULL
+;
+
 -- 18	사원 이름을 모두 대문자로 조회하기
+-- 이름이 한글임
+
 -- 19	사원 이름의 글자 수 조회하기
+SELECT
+	CHAR_LENGTH(`name`) len_name
+FROM employees
+ORDER BY CHAR_LENGTH(`name`) DESC
+;
+
+
 -- 20	사원의 입사 연도만 조회하기
+SELECT
+	YEAR(hire_at)
+FROM employees
+ORDER BY hire_at
+;
+
 -- 21	현재 날짜 기준으로 입사 연차 계산하기
+SELECT
+	TIMESTAMPDIFF(YEAR, hire_at, NOW()) cal_year
+	, emp_id
+	, hire_at
+FROM employees
+ORDER BY hire_at DESC
+;
+
 -- 22	급여를 천 단위로 반올림하여 조회하기
+SELECT
+	ROUND(salary, -3) rnd_sal
+FROM salaries
+;
+
 -- 23	사원 이름과 급여를 하나의 문자열로 합치기
+SELECT
+	CONCAT_WS(' ', emp.`name`, sal.salary)
+FROM employees emp
+	JOIN salaries sal
+		ON emp.emp_id = sal.emp_id
+			AND emp.fire_at IS NULL
+			AND sal.end_at IS NULL
+;
+
 -- 24	이름이 '김'으로 시작하는 사원 조회하기
+SELECT
+	`name`
+FROM employees
+WHERE
+	`name` LIKE '김%'
+;
 -- 25	퇴사일이 NULL인 재직자 조회하기
+SELECT
+	*
+FROM employees
+WHERE 
+	fire_at IS NULL
+;
+
 -- 26 사원들의 평균 급여를 구하되 소수점 없이 출력하기
+SELECT
+	CEIL(AVG(salary))
+FROM salaries
+;
+
 -- 27 입사일을 YYYY년 MM월 DD일 형식으로 출력하기
+
 -- 28 사원의 이름과 입사일, 입사한 지 며칠이 지났는지 함께 조회하기
 -- 29	성별별 사원 수 구하기
 -- 30	부서별 사원 수 구하기
